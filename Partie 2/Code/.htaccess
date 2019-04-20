@@ -1,0 +1,22 @@
+RewriteEngine On
+
+RewriteCond %{SERVER_PORT} 80
+
+RewriteCond %{REQUEST_URI} ^(.*?/|)/{1,}(.*)$
+RewriteRule ^(.*?/|)/{1,}(.*|)$ $1$2 [NC,L]
+
+RewriteCond %{REQUEST_URI} !-d
+RewriteCond %{REQUEST_URI} !-f
+RewriteCond %{REQUEST_URI} ^(.*?)\w+\.php(/.{3,})$
+RewriteRule ^(.*?)\w+\.php/(.{3,})$ $1$2 [NC,L]
+
+RewriteCond %{REQUEST_URI} !-d
+RewriteCond %{REQUEST_URI} !-f
+RewriteCond %{REQUEST_URI} !^(.*?)/$
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1\.php [NC,L]
+
+ErrorDocument 401 /~s161278/error?e=401
+ErrorDocument 403 /~s161278/error?e=403
+ErrorDocument 404 /~s161278/error?e=404
+ErrorDocument 500 /~s161278/error?e=500

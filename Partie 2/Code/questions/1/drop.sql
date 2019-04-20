@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS participations_conferences;
+DROP TABLE IF EXISTS articles_conferences;
+DROP TABLE IF EXISTS conferences;
+DROP TABLE IF EXISTS articles_journaux;
+DROP TABLE IF EXISTS revues;
+DROP TABLE IF EXISTS seconds_auteurs;
+DROP TABLE IF EXISTS sujets_articles;
+DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS auteurs;
+DROP TABLE IF EXISTS institutions;

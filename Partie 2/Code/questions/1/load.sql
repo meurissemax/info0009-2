@@ -1,0 +1,61 @@
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/institutions.csv' INTO TABLE institutions
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/auteurs.csv' INTO TABLE auteurs
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/articles.csv' INTO TABLE articles
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(`url`, `doi`, `titre`, @DATE_STR, `matricule_premier_auteur`)
+SET `date_publication` = STR_TO_DATE(@DATE_STR, '%d/%m/%Y');
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/sujets_articles.csv' INTO TABLE sujets_articles
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/seconds_auteurs.csv' INTO TABLE seconds_auteurs
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/revues.csv' INTO TABLE revues
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/articles_journaux.csv' INTO TABLE articles_journaux
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/conferences.csv' INTO TABLE conferences
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/articles_conferences.csv' INTO TABLE articles_conferences
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE '/home/s161278/WWW/resources/csv/participations_conferences.csv' INTO TABLE participations_conferences
+CHARACTER SET 'UTF8'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
