@@ -8,6 +8,10 @@ if(!connect()) {
 	redirect('../login?r=questions/2e');
 }
 
+if($nb_tables == 0) {
+	redirect('1/?error=no_table');
+}
+
 $HEAD_TITLE = 'Sujets de recherche populaires';
 
 $sql = "SELECT sujet, COUNT(sujet) AS used

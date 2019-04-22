@@ -8,6 +8,10 @@ if(!connect()) {
 	redirect('../login?r=questions/2c');
 }
 
+if($nb_tables == 0) {
+	redirect('1/?error=no_table');
+}
+
 $HEAD_TITLE = 'Ajouter un nouvel article';
 
 /// On récupère toutes les données supposées connues dans la base de données
@@ -234,36 +238,57 @@ if($_POST) {
 		/* Insertion des données dans la base de données */
 		/* --------------------------------------------- */
 		if(empty($error)) {
-			$sql = "";
+			try {
+				$connect->beginTransaction();
 
-			// articles
-			$sql .= "INSERT INTO articles (url, doi, titre, date_publication, matricule_premier_auteur) VALUES ('$url', $doi, '$titre', '$date_publication', $premier_auteur);";
+				$lock = "LOCK TABLES articles WRITE, sujets_articles WRITE";
+				$sql = "";
 
-			// sujets_articles
-			foreach($sujets as $sujet) {
-				$sql .= "INSERT INTO sujets_articles (url, sujet) VALUES ('$url', '$sujet');";
-			}
+				// articles
+				$sql .= "INSERT INTO articles (url, doi, titre, date_publication, matricule_premier_auteur) VALUES ('$url', $doi, '$titre', '$date_publication', $premier_auteur);";
 
-			// seconds_auteurs
-			if(!empty($seconds_auteurs)) {
-				foreach($seconds_auteurs as $second_auteur) {
-					$sql .= "INSERT INTO seconds_auteurs (url, matricule) VALUES ('$url', $second_auteur);";
+				// sujets_articles
+				foreach($sujets as $sujet) {
+					$sql .= "INSERT INTO sujets_articles (url, sujet) VALUES ('$url', '$sujet');";
 				}
+
+				// seconds_auteurs
+				if(!empty($seconds_auteurs)) {
+					$lock .= ", seconds_auteurs WRITE";
+
+					foreach($seconds_auteurs as $second_auteur) {
+						$sql .= "INSERT INTO seconds_auteurs (url, matricule) VALUES ('$url', $second_auteur);";
+					}
+				}
+
+				// articles_journaux
+				if($type == 'journal') {
+					$lock .= ", articles_journaux WRITE";
+
+					$sql .= "INSERT INTO articles_journaux (url, pg_debut, pg_fin, nom_revue, n_journal) VALUES ('$url', $page_debut, $page_fin, '$revue', $n_journal);";
+				}
+
+				// articles_conferences
+				if($type == 'conference') {
+					$lock .= ", articles_conferences WRITE";
+
+					$sql .= "INSERT INTO articles_conferences (url, presentation, nom_conference, annee_conference) VALUES ('$url', '$presentation', '$nom_conference', $annee_conference);";
+				}
+
+				$lock .= ";";
+
+				$connect->query($lock);
+				$connect->query($sql);
+				$connect->commit();
+
+				$success = 'L\'article a été ajouté à la base de données !';
+			} catch(Exception $e) {
+				$connect->rollback();
+
+				$error = 'Une erreur est survenue lors de l\'insertion des données dans la base de données.';
 			}
 
-			// articles_journaux
-			if($type == 'journal') {
-				$sql .= "INSERT INTO articles_journaux (url, pg_debut, pg_fin, nom_revue, n_journal) VALUES ('$url', $page_debut, $page_fin, '$revue', $n_journal);";
-			}
-
-			// articles_conferences
-			if($type == 'conference') {
-				$sql .= "INSERT INTO articles_conferences (url, presentation, nom_conference, annee_conference) VALUES ('$url', '$presentation', '$nom_conference', $annee_conference);";
-			}
-
-			$connect->query($sql);
-
-			$success = 'L\'article a été ajouté à la base de données !';
+			$connect->query('UNLOCK TABLES');
 		}
 	}
 }
@@ -323,8 +348,12 @@ include('../include/sections/navbar.php');
 			<select class="custom-select" id="inputMatricule" name="premier_auteur" required>
 				<?php
 
-				foreach($db_researchers as $db_researcher) {
-					echo '<option value="'.$db_researcher[0].'">'.$db_researcher[0].' - '.$db_researcher[2].' '.strtoupper($db_researcher[1]).'</option>';
+				if(!empty($db_researchers)) {
+					foreach($db_researchers as $db_researcher) {
+						echo '<option value="'.$db_researcher[0].'">'.$db_researcher[0].' - '.$db_researcher[2].' '.strtoupper($db_researcher[1]).'</option>';
+					}
+				} else {
+					echo '<option value="-1">Aucun chercheur disponible</option>';
 				}
 
 				?>
@@ -369,8 +398,12 @@ include('../include/sections/navbar.php');
 				<select class="custom-select" id="inputRevue" name="revue">
 					<?php
 
-					foreach($db_reviews as $db_review) {
-						echo '<option value="'.$db_review[0].'">'.$db_review[0].'</option>';
+					if(!empty($db_reviews)) {
+						foreach($db_reviews as $db_review) {
+							echo '<option value="'.$db_review[0].'">'.$db_review[0].'</option>';
+						}
+					} else {
+						echo '<option value="-1">Aucune revue disponible</option>';
 					}
 
 					?>
@@ -381,8 +414,12 @@ include('../include/sections/navbar.php');
 				<select class="custom-select" id="inputNJournal" name="n_journal">
 					<?php
 
-					foreach($db_njournals as $db_njournal) {
-						echo '<option value="'.$db_njournal[0].'">'.$db_njournal[0].'</option>';
+					if(!empty($db_njournals)) {
+						foreach($db_njournals as $db_njournal) {
+							echo '<option value="'.$db_njournal[0].'">'.$db_njournal[0].'</option>';
+						}
+					} else {
+						echo 'Aucun journal disponible';
 					}
 
 					?>
@@ -399,8 +436,12 @@ include('../include/sections/navbar.php');
 				<select class="custom-select" id="inputNomConference" name="nom_conference">
 					<?php
 
-					foreach($db_conferences as $db_conference) {
-						echo '<option value="'.$db_conference[0].'">'.$db_conference[0].' ('.$db_conference[1].')</option>';
+					if(!empty($db_conferences)) {
+						foreach($db_conferences as $db_conference) {
+							echo '<option value="'.$db_conference[0].'">'.$db_conference[0].' ('.$db_conference[1].')</option>';
+						}
+					} else {
+						echo 'Aucune conférence disponible';
 					}
 
 					?>

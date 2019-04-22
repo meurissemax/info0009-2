@@ -8,6 +8,10 @@ if(!connect()) {
 	redirect('../login?r=questions/2a');
 }
 
+if($nb_tables == 0) {
+	redirect('1/?error=no_table');
+}
+
 $HEAD_TITLE = 'Recherche';
 
 /// On récupère tous les noms de tables et colonnes
@@ -68,7 +72,7 @@ if($_POST) {
 					if(is_numeric($constraint[1])) {
 						$sql .= "$constraint[0] = $constraint[1] AND ";
 					} else {
-						$sql .= "$constraint[0] LIKE '%$constraint[1]%' AND ";
+						$sql .= "$constraint[0] COLLATE UTF8_GENERAL_CI LIKE '%$constraint[1]%' AND ";
 					}
 				}
 

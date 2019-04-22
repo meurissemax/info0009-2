@@ -53,6 +53,14 @@ include('../../include/sections/header.php');
 				echo '<div class="alert alert-success alert-dismissible fade show" role="alert">Tables de la base de données effacées avec succès !<button type="button" class="close" data-dismiss="alert" aria-label="Fermer"><span aria-hidden="true">&times;</span></button></div>';
 			}
 		}
+
+		if(isset($_GET['error'])) {
+			$error = htmlspecialchars($_GET['error']);
+
+			if($error == 'no_table') {
+				echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">La base de données ne contient aucune table, elle doit être initialisée !<button type="button" class="close" data-dismiss="alert" aria-label="Fermer"><span aria-hidden="true">&times;</span></button></div>';
+			}
+		}
 	}
 
 	?>
@@ -62,9 +70,10 @@ include('../../include/sections/header.php');
 				<div class="card-body">
 					<p class="lead">Initialiser la base de données</p>
 					<div class="alert alert-light">
-						<span class="badge badge-pill badge-primary mr-2 align-middle">Question 1</span> <span class="align-middle">Ce bouton permet d'initialiser la base de données, c.-à.-d. créer de nouvelles tables sur base des fichiers fournis :</span>
+						<span class="badge badge-pill badge-primary mr-2 align-middle">Question 1</span> <span class="align-middle">Ce bouton permet d'initialiser la base de données, c.-à.-d. créer de nouvelles tables et les remplir sur base des fichiers <code>CSV</code> fournis :</span>
 						<?php
 
+						/// On affiche tous les fichiers CSV existants
 						if($content = scandir('../../resources/csv/')) {
 							echo '<ul>';
 
@@ -93,6 +102,7 @@ include('../../include/sections/header.php');
 						Ce bouton permet de supprimer toutes les tables de la base de données. Actuellement, la base de données contient les tables suivantes :
 						<?php
 
+						/// On affiche toutes les tables existantes
 						if(empty($table_names)) {
 							echo ' <b>aucune table créée.</b>';
 						} else {

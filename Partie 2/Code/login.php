@@ -72,7 +72,7 @@ include('include/sections/header.php');
 					<?php
 
 					if($_GET) {
-						if(isset($_GET['from'])) {
+						if(isset($_GET['from']) && empty($error)) {
 							$from = htmlspecialchars($_GET['from']);
 
 							if($from == 'logout') {

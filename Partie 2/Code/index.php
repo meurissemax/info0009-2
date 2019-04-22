@@ -9,7 +9,7 @@ if(!connect()) {
 
 $HEAD_TITLE = 'Accueil';
 
-/* Récupération de la date de dernière mise à jour du fichier */
+/// Récupération de la date de dernière mise à jour du fichier
 $filename = 'index.php';
 
 if(file_exists($filename)) {

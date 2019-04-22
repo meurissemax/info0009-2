@@ -8,6 +8,10 @@ if(!connect()) {
 	redirect('../login?r=questions/2d');
 }
 
+if($nb_tables == 0) {
+	redirect('1/?error=no_table');
+}
+
 $HEAD_TITLE = 'Participants auteurs';
 
 $sql = "SELECT matricule, nom, prenom

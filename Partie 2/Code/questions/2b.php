@@ -8,6 +8,10 @@ if(!connect()) {
 	redirect('../login?r=questions/2b');
 }
 
+if($nb_tables == 0) {
+	redirect('1/?error=no_table');
+}
+
 $HEAD_TITLE = 'Publications d\'un chercheur';
 
 /// On récupère les matricule, nom et prénom de tous les chercheurs
@@ -101,8 +105,12 @@ include('../include/sections/navbar.php');
 				<select class="custom-select" id="listMatricules" name="matricule" aria-label="Matricule du chercheur" aria-describedby="button-addon" required>
 					<?php
 
-					foreach($researchers as $researcher) {
-						echo '<option value="'.$researcher[0].'">'.$researcher[0].' - '.$researcher[2].' '.strtoupper($researcher[1]).'</option>';
+					if(!empty($researchers)) {
+						foreach($researchers as $researcher) {
+							echo '<option value="'.$researcher[0].'">'.$researcher[0].' - '.$researcher[2].' '.strtoupper($researcher[1]).'</option>';
+						}
+					} else {
+						echo '<option value="-1">Aucun chercheur disponible</option>';
 					}
 
 					?>
