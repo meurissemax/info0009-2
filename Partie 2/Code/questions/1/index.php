@@ -41,6 +41,7 @@ include('../../include/sections/header.php');
 <div class="container mt-5">
 	<?php
 
+	/// Affichage des alertes
 	if($_GET) {
 		if(isset($_GET['success'])) {
 			$success = htmlspecialchars($_GET['success']);
@@ -75,17 +76,21 @@ include('../../include/sections/header.php');
 
 						/// On affiche tous les fichiers CSV existants
 						if($content = scandir('../../resources/csv/')) {
-							echo '<ul>';
+							if(empty($content)) {
+								echo '<b>aucun fichier.</b>';
+							} else {
+								echo '<ul>';
 
-							foreach($content as $file) {
-								if(!is_dir($file) && $file != '.' && $file != '..') {
-									echo '<li>'.$file.'</li>';
+								foreach($content as $file) {
+									if(!is_dir($file) && $file != '.' && $file != '..') {
+										echo '<li>'.$file.'</li>';
+									}
 								}
-							}
 
-							echo '</ul>';
+								echo '</ul>';
+							}
 						} else {
-							echo 'Erreur d\'affichage des fichiers.';
+							echo '<b>erreur d\'affichage des fichiers.</b>';
 						}
 						
 						?>

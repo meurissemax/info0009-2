@@ -43,7 +43,7 @@ if($_POST) {
 								SELECT url, 'journal' AS type
 								FROM articles_journaux
 								UNION
-								SELECT url, 'conference' AS type
+								SELECT url, 'conférence' AS type
 								FROM articles_conferences
 							) AS articles_type
 						WHERE matricule_premier_auteur = $matricule

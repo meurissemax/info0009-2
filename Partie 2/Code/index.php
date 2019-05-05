@@ -35,6 +35,9 @@ include('include/sections/navbar.php');
 		</p>
 		<p>Pour initialiser la base de données, se rendre sur l'URL : <a href="questions/1/" class="alert-link"><?php echo $SERVER_NAME; ?>/questions/1/</a></p>
 	</div>
+	<div class="alert alert-light" role="alert">
+		Ce site web a été réalisé à l'aide de <a href="https://getbootstrap.com" target="_blank" class="alert-link">bootstrap</a>. Les icônes utilisées proviennent du site web <a href="https://www.flaticon.com" target="_blank" class="alert-link">flaticon</a>.
+	</div>
 	<div class="alert alert-dark" role="alert">
 		Dernière mise à jour : <b><?php echo $last_to_str; ?></b>.
 	</div>

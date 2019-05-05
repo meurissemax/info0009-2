@@ -93,11 +93,11 @@ include('include/sections/header.php');
 					<form method="post">
 						<div class="form-group">
 							<label for="inputUser">Nom d'utilisateur</label>
-							<input type="text" class="form-control" id="inputUser" name="username" placeholder="<?php echo $dbusername; ?>" required>
+							<input type="text" class="form-control" id="inputUser" name="username" required>
 						</div>
 						<div class="form-group">
 							<label for="inputPassword">Mot de passe</label>
-							<input type="password" class="form-control" id="inputPassword" name="password" placeholder="<?php echo $dbpassword; ?>" required>
+							<input type="password" class="form-control" id="inputPassword" name="password" required>
 						</div>
 						<button type="submit" class="btn btn-primary">Connexion</button>
 					</form>

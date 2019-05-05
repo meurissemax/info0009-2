@@ -55,7 +55,7 @@ include('../include/sections/navbar.php');
 <div class="container">
 	<p class="lead">Sujets de recherche populaires</p>
 	<div class="alert alert-primary">
-		<span class="badge badge-pill badge-light mr-2 align-middle">Question 2.e</span> <span class="align-middle">Cette page permet de retrouver les sujets de recherche les plus étudiés (trier par ordre décroissant) au cours des 5 conférences les plus populaires depuis 2012.</span>
+		<span class="badge badge-pill badge-light mr-2 align-middle">Question 2.e</span> <span class="align-middle">Cette page permet de retrouver les sujets de recherche les plus étudiés (triés par ordre décroissant) au cours des 5 conférences les plus populaires depuis 2012.</span>
 	</div>
 	<table class="table table-sm table-borderless table-hover mb-0">
 		<thead>

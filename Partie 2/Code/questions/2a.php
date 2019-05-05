@@ -54,8 +54,15 @@ if($_POST) {
 				$constraint[0] = trim($constraint[0]);
 				$constraint[1] = trim($constraint[1]);
 
-				if(in_array($constraint[0], $bdd_infos[$table])) {
-					array_push($tab_constraints, $constraint);
+				if(!empty($constraint[1])) {
+					/// cas particulier de la date de publication d'un article
+					if($constraint[0] == $bdd_infos['articles'][3]) {
+						$constraint[1] = date('Y-m-d', strtotime(str_replace('/', '-', $constraint[1])));
+					}
+
+					if(in_array($constraint[0], $bdd_infos[$table])) {
+						array_push($tab_constraints, $constraint);
+					}
 				}
 			}
 		}
@@ -69,9 +76,13 @@ if($_POST) {
 				$sql .= " WHERE ";
 
 				foreach($tab_constraints as $constraint) {
-					if(is_numeric($constraint[1])) {
-						$sql .= "$constraint[0] = $constraint[1] AND ";
-					} else {
+					/// contrainte d'égalité
+					if(is_numeric($constraint[1]) || $constraint[0] == $bdd_infos['articles'][3]) {
+						$sql .= "$constraint[0] = '$constraint[1]' AND ";
+					}
+
+					/// contrainte de contenance
+					else {
 						$sql .= "$constraint[0] COLLATE UTF8_GENERAL_CI LIKE '%$constraint[1]%' AND ";
 					}
 				}
@@ -119,7 +130,9 @@ include('../include/sections/navbar.php');
 				<div class="modal-body">
 					<p>Pour effectuer une recherche dans la base de données, il faut tout d'abord sélectionner une <b>table</b> dans la liste déroulante.</p>
 					<p>Des <b>contraintes</b> portant sur les attributs de la table peuvent être renseignées dans le champ prévu à cet effet. Si aucune contrainte n'est renseignée, tous les tuples de la table seront affichés.</p>
-					<p>Une contrainte s'écrit sous la forme : <code>attribut1=value1, attribut2=value2, ...</code></p>
+					<p>Les contraintes sont limitées à des contraintes de contenance pour les attributs qui sont assimilables à des chaînes de caractères, et à des contraintes d'égalité pour les attributs qui sont des nombres.</p>
+					<p>Une contrainte s'écrit sous la forme : <code>attribut1=value1, attribut2=value2, ...</code>.</p>
+					<p>Une date se renseigne sous la forme : <code>dd/mm/yyyy</code>.</p>
 					<p>Les attributs de chaque table sont présentés dans le tableau suivant.</p>
 					<table class="table table-sm table-borderless table-hover mb-0">
 						<tbody>
