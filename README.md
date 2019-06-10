@@ -15,3 +15,8 @@ Project realized as part of the *Bases de données (organisation générale)* co
 * **Sabrina Bonghi**
 * **Maxime Meurisse** - [meurissemax](https://github.com/meurissemax)
 * **Valentin Vermeylen** - [ValentinVermeylen](https://github.com/ValentinVermeylen)
+
+## Scores
+
+* Part 1 received a score of **19/20**.
+* Part 2 received a score of **17.5/20**.
