@@ -1,0 +1,192 @@
+\documentclass[a4paper, 12pt]{article}
+
+\def\languages{english, french}
+
+%%%%%%%%%%%%%%%%%%% Libraries
+
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/bibliography.tex}
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/default.tex}
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/figures.tex}
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/informatics.tex}
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/mathematics.tex}
+
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/languages/french.tex}
+
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/theorems.tex}
+\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/libraries/units.tex}
+
+%%%%%%%%%%%%%%%%%%% Titlepage
+
+\def\logopath{/Users/maximemeurisse/Documents/LaTeX/personal/resources/pdf/logo-uliege.pdf}
+\def\toptitle{Bases de données}
+\title{Données de production d'articles scientifiques}
+\def\subtitle{Projet (partie 1)}
+%\def\authorhead{AUTHOR}
+\author{Maxime \textsc{Meurisse} (20161278)\\}
+%\def\rightauthorhead{}
+%\def\rightauthor{}
+\def\context{3\ieme{} année de Bachelier Ingénieur civil}
+\date{Année académique 2018-2019}
+
+%%%%%%%%%%%%%%%%%%%
+
+\fancyhead[R]{}
+
+%%%%%%%%%%%%%%%%%%% Document
+
+\begin{document}
+	\input{/Users/maximemeurisse/Documents/LaTeX/sleek-template/include/titlepages/default.tex}
+	\section{Diagramme entité-relation}
+	Le diagramme entité-relation est fourni dans le fichier \texttt{diagramme.pdf} joint à ce document.\par
+	Les codes de mise en forme utilisés sont ceux du cours, à quelques exceptions près\footnote{Le programme utilisé ne permettait pas de respecter scrupuleusement le code de mise en forme du cours.} :
+	\begin{itemize}
+		\item les attributs uniques sont soulignés;
+		\item les attributs uniques qui sont des clés sont soulignés et en gras;
+		\item les entités et relations faibles sont représentées par une bordure très épaisse.
+	\end{itemize}
+	\subsection{Clés}
+	\subsubsection{Entités}
+	Les clés des entités sont reprises dans la table \ref{tab:cle_entites}.\par
+	\begin{table}[!ht]
+		\centering
+		\begin{tabular}{|c|c|}
+			\hline
+			{\bf Entité} & {\bf Clé}\\ \hline
+			\hline
+			Auteur & Matricule\\ \hline
+			Conférence & Nom\_conf + Année\_production\\ \hline
+			Article\_conférence & URL\\ \hline
+			Article\_scientifique & URL\\ \hline
+			Article\_journal & URL\\ \hline
+			Journal & Numéro\_publication + rôle \og rev\fg{} de Publie\_j\\ \hline
+			Revue & Nom\_rev\\ \hline
+		\end{tabular}
+		\caption{Clés des entités.}
+		\label{tab:cle_entites}
+	\end{table}
+	Notons que les 3 entités articles ont la même clé car Article\_conférence et Article\_journal sont des enfants de Article\_scientifique (relation \og is a\fg{}).
+	\subsubsection{Relations}
+	Les clés des relations sont reprises dans la table \ref{tab:cle_relations}.\par
+	\begin{table}[!ht]
+		\centering
+		\begin{tabular}{|c|c|}
+			\hline
+			{\bf Relation} & {\bf Clé}\\ \hline
+			\hline
+			Assiste & Rôle \og aut\fg{} de Assiste + rôle \og conf\fg{} de Assiste\\ \hline
+			Publie\_a & Rôle \og art\fg{} de Publie\_a\\ \hline
+			Écrit & Rôle \og art\fg{} de Écrit\\ \hline
+			Co-écrit & Rôle \og aut\fg{} de Co-écrit + rôle \og art\fg{} de Co-écrit\\ \hline
+			Contient & Rôle \og art\fg{} de Contient\\ \hline
+			Publie\_j & Rôle \og journ\fg{} de Publie\_j\\ \hline
+		\end{tabular}
+		\caption{Clés des relations.}
+		\label{tab:cle_relations}
+	\end{table}
+	\newpage
+	\subsection{Contraintes de cardinalité}
+	Il s'agit de préciser, pour chaque ensemble d'entités participant à une relation, dans combien de tuples chaque entité peut apparaître.
+	\subsubsection{\og is a\fg{} des articles}
+	La cardinalité de Article\_scientifique est (1,1): un article est forcément soit un Article\_conférence soit un Article\_journal, et ne peut être que l'un des deux.
+	\subsubsection{Assiste}
+	La cardinalité de Auteur est (0,N): un auteur peut n'assister à aucune conférence mais peut également assister à une ou plusieurs conférences.\par
+	La cardinalité de Conférence est (0,N): une conférence peut être assistée par aucun auteur mais peut également être assistée par un ou plusieurs auteurs.
+	\subsubsection{Écrit}
+	La cardinalité de Auteur est (1,N): un auteur écrit au minimum un article (sinon il ne serait pas qualifié d'auteur) et peut également en écrire plusieurs.\par
+	La cardinalité de Article\_scientifique est (1,1): un article n'est écrit que par un et un seul premier auteur. Tout autre auteur est un auteur secondaire.
+	\subsubsection{Co-écrit}
+	La cardinalité de Auteur est (0,N): dans cette relation, Auteur représenté un second auteur. Un auteur peut ne jamais avoir été second auteur pour un article, ou peut être plusieurs fois second auteur (pour plusieurs articles différents).\par
+	La cardinalité de Article\_scientifique est (0,N): un article peut n'avoir été écrit par aucun second auteur (uniquement un premier auteur) ou par plusieurs seconds auteurs.
+	\subsubsection{Publie\_a}
+	La cardinalité de Conférence est (0,N): une conférence peut ne pas publier d'article mais peut également en publier plusieurs.\par
+	La cardinalité de Article\_conférence est (1,1): un article de conférence est forcément publié par une conférence, et n'est publié que par cette conférence.
+	\subsubsection{Contient}
+	La cardinalité de Journal est (1, N): un journal contient au minimum un article de journal, mais peut en contenir plusieurs.\par
+	La cardinalité de Article\_journal est (1,1): un article est forcément contenu dans un journal, et n'est contenu que dans ce journal.
+	\subsubsection{Publie\_j}
+	La cardinalité de Revue est (1,N): une revue publie au moins un journal, mais peut en publier plusieurs.\par
+	La cardinalité de Journal est (1, 1): un journal est forcément publié par une revue, et n'est publié que par cette revue.
+	\subsubsection{Remarques}
+	Avec les cardinalités actuelles, il n'est pas possible d'encoder certaines entités dans la base de données. Par exemple, pour encoder un journal, il faut encoder une revue, mais pour encoder une revue, il faut encoder un journal (on tourne en rond).\par
+	En pratique, ce problème peut être résolu en mettant certaines cardinalités minimum à 0, notamment:
+	\begin{itemize}
+		\item Auteur (dans la relation Écrit) : (0,N);
+		\item Revue (dans la relation Publie\_j) : (0,N) ou Journal (dans la relation Contient) : (0,N).
+	\end{itemize}
+	\subsection{Contraintes d'intégrité additionnelles}
+	Quelques contraintes d'intégrités supplémentaires sont à souligner:
+	\begin{itemize}
+		\item Conférence: Numéro doit être positif, Nom\_rue et Ville doivent exister
+		\item Article\_scientifique: URL doit être au format \og (http(s)://)(www.)<nom de domaine>\fg{}, DOI doit être un numéro
+		\item Article\_journal: Page\_début doit être plus petit ou égal à Page\_fin
+		\item Journal: Numéro\_publication doit être un numéro
+		\item Revue: Facteur\_impact doit être un nombre positif
+	\end{itemize}
+	On considère également que tous les attributs représentant une date doivent être inférieur à la date du jour. En effet, on suppose que rien n'est encodé à l'avance dans la base de données; tout ce qui est encodé a déjà eu lieu ou est publié.
+	\subsection{Relations et entités faibles}
+	Dans ce modèle, Journal est une entité faible (avec la relation faible Publie\_j). En effet, le numéro de publication identifie le journal de manière unique {\it au sein de la revue qui le publie}. Pour être identifié complètement de manière unique, il faut donc connaître le numéro de publication du journal et le nom de la revue qui le publie. 
+	\section{Modèle relationnel}
+	\subsection{Conversion vers le modèle relationnel}
+	On commence par traduire le diagramme entité-relation en un modèle relationnel.
+	\subsubsection{Ensemble d'entités \og normaux\fg{}}
+	\begin{itemize}
+		\item Auteur(\underline{Matricule}, Nom\_aut, Prénom\_aut, Date\_doctorat)
+		\item Conférence(\underline{Nom\_conf}, \underline{Année\_production}, Numéro, Nom\_rue, Ville)
+		\item Revue(\underline{Nom\_rev}, Facteur\_impact)
+		\item Sujets\_recherche(\#\underline{URL}, \underline{Ordre}, sujet\_recherche)
+	\end{itemize}
+	\subsubsection{Ensemble d'entités faibles}
+	\begin{itemize}
+		\item Journal(\underline{Numéro\_publication}, \#\underline{Nom\_rev})
+	\end{itemize}
+	\subsubsection{Ensemble d'entités liés par une relation \og is a\fg{}}
+	\begin{itemize}
+		\item Article\_scientifique(\underline{URL}, DOI, Titre, Date\_publication, \#Matricule)
+		\item Article\_conférence(\underline{URL}, Façon\_présenté, \#Nom\_conf, \#Année\_production)
+		\item Article\_journal(\underline{URL}, Page\_début, Page\_fin, \#Numéro\_publication, \#Nom\_rev)
+	\end{itemize}
+	\subsubsection{Relations}
+	\begin{itemize}
+		\item Assiste(\#\underline{Matricule}, \#\underline{Nom\_conf}, \#\underline{Année\_production}, Tarif\_appliqué)
+		\item Co-écrit(\#\underline{Matricule}, \#\underline{URL})
+	\end{itemize}
+	Les relations Publie\_a, Écrit, Contient et Publie\_j ne sont pas conservées dans le modèle. En effet, celles-ci sont à chaque fois liées à une entité dont la cardinalité maximum est 1.
+	\subsection{Dépendances fonctionnelles et à valeurs multiples}
+	\subsubsection{Dépendances fonctionnelles}
+	La notion de clé est un cas particulier de dépendance fonctionnelle : un ensemble d'attributs $X$ sera une clé d'une relation $R$ par rapport à un ensemble fonctionnel $F$ si $X$ est un ensemble minimum tel que \texttt{\(F\models X\rightarrow R\)}.\par
+	On a donc, pour chacune des relations définies précédemment,
+	\begin{itemize}
+		\item Auteur : Matricule $\rightarrow$ R
+		\item Conférence : Nom\_conf, Année\_production $\rightarrow$ R
+		\item Revue : Nom\_revue $\rightarrow$ R
+		\item Sujets\_recherche : URL, Ordre $\rightarrow$ R
+		\item Article\_scientifique : URL $\rightarrow$ R
+		\item Article\_conférence : URL $\rightarrow$ R
+		\item Article\_journal : URL $\rightarrow$ R
+		\item Assiste : Matricule, Nom\_conf, Année\_production $\rightarrow$ R
+	\end{itemize}
+	Pour les relations Journal et Co-écrit, l'ensemble des attributs-clés correspond à l'ensemble de tous les attributs. Il y a donc peu d'intérêt à dire que ces attributs forment une dépendance fonctionnelle.\par
+	On obtient donc la fermeture de l'ensemble des dépendances de chacune des relations. Il est à noter que ces fermetures contiennent en plus les dépendances triviales et composées.
+	\paragraph{Remarque} On peut également noter qu'on a la dépendance Article\_\{scientifique, conférence, journal\} : DOI $\rightarrow$ R. En effet, comme mentionné dans l'énoncé, le DOI est un numéro unique associé à un article. On ne peut donc pas rencontrer plusieurs tuples qui ont des DOI identiques pour un article, mais des URL différentes.
+	\subsubsection{Dépendances à valeurs multiples}
+	On sait qu'une dépendance $X\rightarrow A_1A_2...A_n$ est équivalente à l'ensemble des dépendances $X\rightarrow A_1$, $X\rightarrow A_2$, ..., $X\rightarrow A_n$.\par
+	De plus, par la propriétés de reproduction, toutes les dépendances fonctionnelles sont également des dépendances à valeurs multiples.\par
+	On a donc,
+	\begin{itemize}
+		\item $D_{\text{Auteur}}$ = \{Matricule $\rightarrow\rightarrow$ Nom\_aut, Matricule $\rightarrow\rightarrow$ Prénom\_aut, Matricule $\rightarrow\rightarrow$ Date\_doctorat\}
+		\item $D_{\text{Conférence}}$ = \{Nom\_conf, Année\_production  $\rightarrow\rightarrow$ Numéro, Nom\_conf, Année\_production  $\rightarrow\rightarrow$ Nom\_rue, Nom\_conf, Année\_production  $\rightarrow\rightarrow$ Ville\}
+		\item $D_{\text{Revue}}$ = \{Nom\_revue $\rightarrow\rightarrow$ Facteur\_impact\}
+		\item $D_{\text{Sujets\_recherche}}$ = \{URL, Ordre $\rightarrow\rightarrow$ sujet\_recherche\}
+		\item $D_{\text{Article\_scientifique}}$ = \{URL $\rightarrow\rightarrow$ DOI, URL $\rightarrow\rightarrow$ Titre, URL $\rightarrow\rightarrow$ Date\_publication, URL $\rightarrow\rightarrow$ Matricule\}
+		\item $D_{\text{Article\_conférence}}$ = $D_{\text{Article\_scientifique}}$ + \{URL $\rightarrow\rightarrow$ Façon\_présenté, URL $\rightarrow\rightarrow$ Nom\_conf, URL $\rightarrow\rightarrow$ Année\_production\}
+		\item $D_{\text{Article\_journal}}$ = $D_{\text{Article\_scientifique}}$ + \{URL $\rightarrow\rightarrow$ Page\_début, URL $\rightarrow\rightarrow$ Page\_fin, URL $\rightarrow\rightarrow$ Numéro\_publication, URL $\rightarrow\rightarrow$ Nom\_revue\}
+		\item $D_{\text{Assiste}}$ =\{Matricule, Nom\_conf, Année\_production $\rightarrow\rightarrow$ Tarif\_appliqué\}
+	\end{itemize}
+	Pour les relations Journal et Co-écrit, la remarque est similaire à celle faite pour les dépendances fonctionnelles.\par
+	Ces dépendances à valeurs multiples ont été déduites des propriétés des dépendances à valeurs multiples. Elles correspondent donc à des dépendances dérivées.\par
+	Ces ensembles contiennent également les dépendances triviales.
+	\subsection{La 4\ieme{} forme normale}
+	Une possibilité pour avoir un schéma de relation en 4FN est que pour toute dépendance $X \rightarrow\rightarrow Y$, $X$ est une super-clé (ou une clé, puisqu'une clé est par définition une super-clé).\par
+	Dans le modèle construit précédemment, tous les membres de gauche de l'ensemble des dépendances à valeurs multiples de chaque relation sont des clés. En effet, les dépendances à valeurs multiples on été déduites des dépendances fonctionnelles, celles-ci ayant été trouvées sur base des clés des relations.\par
+	Le modèle présenté est donc en 4FN (et donc par conséquent en BCNF).
+\end{document}
